@@ -67,7 +67,7 @@ function TodoForm({ onSubmit, onClose }) {
           {/* Checklist Section */}
           <div className="pt-8 space-y-4">
             <h3 className="text-xl font-semibold">Checklist Items</h3>
-            <div className="space-y-4 overflow-y-auto max-h-24">
+            <div className="space-y-4 overflow-y-auto max-h-48">
               {items.map(item => (
                 <input
                   key={item.id}
