@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import TodoItem from './TodoItem';
-import TodoForm from './TodoForm';
 import { PlusIcon } from '@heroicons/react/24/solid';
+import { Link } from 'react-router-dom';
 
 function TodoList() {
   const [todos, setTodos] = useState(() => {
     const savedTodos = localStorage.getItem('todos');
     return savedTodos ? JSON.parse(savedTodos) : [];
   });
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [todosPerPage, setTodosPerPage] = useState(0); // Default for small devices
@@ -52,13 +51,6 @@ function TodoList() {
     setCurrentPage(pageNumber);
   };
 
-  const addTodo = (todo) => {
-    const newTodos = [...todos, todo];
-    setTodos(newTodos);
-    localStorage.setItem('todos', JSON.stringify(newTodos));
-    setIsFormOpen(false);
-  };
-
   const toggleTodoItem = (todoId, itemId) => {
     const newTodos = todos.map(todo => {
       if (todo.id === todoId) {
@@ -80,17 +72,13 @@ function TodoList() {
     <div className="p-4 mx-auto max-w-7xl">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Task Master</h1>
-        <button
-          onClick={() => setIsFormOpen(true)}
+        <Link
+          to="/todo-form"
           className="p-2 text-white transition-colors bg-blue-500 rounded-full hover:bg-blue-600"
         >
           <PlusIcon className="w-6 h-6" />
-        </button>
+        </Link>
       </div>
-
-      {isFormOpen && (
-        <TodoForm onSubmit={addTodo} onClose={() => setIsFormOpen(false)} />
-      )}
 
       {/* Search Bar */}
       <div className="mb-4">

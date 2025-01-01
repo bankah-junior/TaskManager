@@ -1,10 +1,16 @@
-import TodoList from './components/TodoList';
+import {  } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import TodoForm from './pages/TodoForm';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100">
-      <TodoList />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/todo-form" element={<TodoForm />} />
+      </Routes>
+    </Router>
   );
 }
 
