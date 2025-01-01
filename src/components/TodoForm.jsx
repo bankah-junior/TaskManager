@@ -38,62 +38,68 @@ function TodoForm({ onSubmit, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg w-full max-w-2xl">
-        <h2 className="text-2xl font-bold mb-4">New Task</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="w-full max-w-2xl p-6 bg-white rounded-lg">
+        <h2 className="mb-4 text-2xl font-bold">New Task</h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Title Input */}
           <input
             type="text"
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
           
-          <div className="h-48">
+          {/* Description Input */}
+          <div className="h-48 overflow-y-auto">
             <ReactQuill
               theme="snow"
               value={description}
               onChange={setDescription}
               modules={modules}
-              placeholder="Description"
-              preserveWhitespace
+              placeholder="Describe your task..."
+              className="w-full h-full border-2 rounded-lg"
             />
           </div>
 
-          <div className="space-y-2 pt-8">
-            <h3 className="font-semibold">Checklist Items</h3>
-            {items.map(item => (
-              <input
-                key={item.id}
-                type="text"
-                value={item.text}
-                onChange={(e) => updateItem(item.id, e.target.value)}
-                placeholder="List item"
-                className="w-full p-2 border rounded"
-              />
-            ))}
+          {/* Checklist Section */}
+          <div className="pt-8 space-y-4">
+            <h3 className="text-xl font-semibold">Checklist Items</h3>
+            <div className="space-y-4 overflow-y-auto max-h-48">
+              {items.map(item => (
+                <input
+                  key={item.id}
+                  type="text"
+                  value={item.text}
+                  onChange={(e) => updateItem(item.id, e.target.value)}
+                  placeholder="Add checklist item"
+                  className="w-full p-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              ))}
+            </div>
             <button
               type="button"
               onClick={addItem}
-              className="text-blue-500 hover:text-blue-600"
+              className="text-sm text-blue-500 hover:text-blue-600"
             >
-              + Add item
+              + Add another item
             </button>
           </div>
 
-          <div className="flex justify-end space-x-2">
+          {/* Action Buttons */}
+          <div className="flex items-center justify-between mt-6 space-x-4">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              className="px-6 py-2 text-gray-800 bg-gray-300 rounded-md hover:bg-gray-400"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
             >
               Create Task
             </button>
