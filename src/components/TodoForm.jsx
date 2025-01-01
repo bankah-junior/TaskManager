@@ -39,7 +39,7 @@ function TodoForm({ onSubmit, onClose }) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-full max-w-2xl p-6 bg-white rounded-lg">
+      <div className="w-full max-w-2xl p-6 overflow-y-auto bg-white rounded-lg">
         <h2 className="mb-4 text-2xl font-bold">New Task</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Title Input */}
@@ -67,7 +67,7 @@ function TodoForm({ onSubmit, onClose }) {
           {/* Checklist Section */}
           <div className="pt-8 space-y-4">
             <h3 className="text-xl font-semibold">Checklist Items</h3>
-            <div className="space-y-4 overflow-y-auto max-h-48">
+            <div className="space-y-4 overflow-y-auto max-h-24">
               {items.map(item => (
                 <input
                   key={item.id}
