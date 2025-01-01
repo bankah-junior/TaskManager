@@ -11,7 +11,7 @@ function TodoList() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [todosPerPage, setTodosPerPage] = useState(6); // Default for small devices
+  const [todosPerPage, setTodosPerPage] = useState(0); // Default for small devices
 
   // Update the number of todos per page based on window size
   useEffect(() => {
@@ -128,7 +128,7 @@ function TodoList() {
         </span>
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          disabled={currentPage === totalPages || totalPages === 0}
           className="p-2 text-white bg-blue-500 rounded-md disabled:bg-gray-300"
         >
           Next
