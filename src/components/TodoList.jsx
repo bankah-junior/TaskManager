@@ -1,41 +1,79 @@
-import { useState, useEffect } from 'react';
-import TodoItem from './TodoItem';
-import { PlusIcon } from '@heroicons/react/24/solid';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import TodoItem from "./TodoItem";
+import { PlusIcon, ArrowsUpDownIcon } from "@heroicons/react/24/solid";
+import { Link } from "react-router-dom";
+
+function SortableTodo({ todo, index, toggleTodoItem }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: todo.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center p-4 bg-white border border-gray-300 rounded shadow"
+    >
+      {/* Drag Handle Icon */}
+      <div {...listeners} {...attributes} className="mr-4 cursor-grab">
+        <ArrowsUpDownIcon className="w-6 h-6 text-gray-500" />
+      </div>
+
+      {/* Todo Content */}
+      <div className="flex-1">
+        <TodoItem key={todo.id} todo={todo} onToggleItem={toggleTodoItem} />
+      </div>
+    </div>
+  );
+}
 
 function TodoList() {
   const [todos, setTodos] = useState(() => {
-    const savedTodos = localStorage.getItem('todos');
+    const savedTodos = localStorage.getItem("todos");
     return savedTodos ? JSON.parse(savedTodos) : [];
   });
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [todosPerPage, setTodosPerPage] = useState(0); // Default for small devices
+  const [todosPerPage, setTodosPerPage] = useState(0);
 
-  // Update the number of todos per page based on window size
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
-        setTodosPerPage(12); // 12 todos per page for large devices (desktop)
+        setTodosPerPage(12);
       } else {
-        setTodosPerPage(6); // 6 todos per page for small devices (mobile/tablet)
+        setTodosPerPage(6);
       }
     };
 
-    handleResize(); // Call initially
-    window.addEventListener('resize', handleResize); // Add resize listener
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize); // Cleanup on component unmount
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
-  // Filter todos based on search query
-  const filteredTodos = todos.filter(todo =>
+  const filteredTodos = todos.filter((todo) =>
     todo.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredTodos.length / todosPerPage);
   const paginatedTodos = filteredTodos.slice(
     (currentPage - 1) * todosPerPage,
@@ -44,7 +82,7 @@ function TodoList() {
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    setCurrentPage(1); // Reset to first page on search
+    setCurrentPage(1);
   };
 
   const handlePageChange = (pageNumber) => {
@@ -52,9 +90,9 @@ function TodoList() {
   };
 
   const toggleTodoItem = (todoId, itemId) => {
-    const newTodos = todos.map(todo => {
+    const newTodos = todos.map((todo) => {
       if (todo.id === todoId) {
-        const newItems = todo.items.map(item => {
+        const newItems = todo.items.map((item) => {
           if (item.id === itemId) {
             return { ...item, completed: !item.completed };
           }
@@ -65,7 +103,22 @@ function TodoList() {
       return todo;
     });
     setTodos(newTodos);
-    localStorage.setItem('todos', JSON.stringify(newTodos));
+    localStorage.setItem("todos", JSON.stringify(newTodos));
+  };
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setTodos((prevTodos) => {
+        const oldIndex = prevTodos.findIndex((todo) => todo.id === active.id);
+        const newIndex = prevTodos.findIndex((todo) => todo.id === over.id);
+
+        const newTodos = arrayMove(prevTodos, oldIndex, newIndex);
+        localStorage.setItem("todos", JSON.stringify(newTodos));
+        return newTodos;
+      });
+    }
   };
 
   return (
@@ -91,16 +144,24 @@ function TodoList() {
         />
       </div>
 
-      {/* Todo List */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {paginatedTodos.map(todo => (
-          <TodoItem
-            key={todo.id}
-            todo={todo}
-            onToggleItem={toggleTodoItem}
-          />
-        ))}
-      </div>
+      {/* Todo List with Drag-and-Drop */}
+      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext
+          items={paginatedTodos.map((todo) => todo.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {paginatedTodos.map((todo, index) => (
+              <SortableTodo
+                key={todo.id}
+                todo={todo}
+                index={index}
+                toggleTodoItem={toggleTodoItem}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
 
       {/* Pagination Controls */}
       <div className="flex items-center justify-between mt-4">
