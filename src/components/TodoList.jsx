@@ -11,7 +11,7 @@ import TodoItem from "./TodoItem";
 import { PlusIcon, ArrowsUpDownIcon } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 
-function SortableTodo({ todo, index, toggleTodoItem }) {
+function SortableTodo({ todo, index, toggleTodoItem, todos, setTodos }) {
   const {
     attributes,
     listeners,
@@ -38,7 +38,7 @@ function SortableTodo({ todo, index, toggleTodoItem }) {
 
       {/* Todo Content */}
       <div className="flex-1">
-        <TodoItem key={todo.id} todo={todo} onToggleItem={toggleTodoItem} />
+        <TodoItem key={todo.id} todo={todo} onToggleItem={toggleTodoItem} todos={todos} setTodos={setTodos} />
       </div>
     </div>
   );
@@ -157,6 +157,8 @@ function TodoList() {
                 todo={todo}
                 index={index}
                 toggleTodoItem={toggleTodoItem}
+                todos={todos}
+                setTodos={setTodos}
               />
             ))}
           </div>

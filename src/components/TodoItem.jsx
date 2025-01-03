@@ -4,7 +4,7 @@ import 'react-quill/dist/quill.snow.css';
 import { ClipboardDocumentCheckIcon } from '@heroicons/react/24/outline';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
 
-function TodoItem({ todo, onToggleItem }) {
+function TodoItem({ todo, onToggleItem, todos, setTodos }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpenDetails = () => setIsOpen(true);
@@ -12,6 +12,19 @@ function TodoItem({ todo, onToggleItem }) {
 
   const completedItems = todo.items.filter((item) => item.completed).length;
   const totalItems = todo.items.length;
+
+  const handleUpdateTodo = (todo) => {
+    const updatedTodos = todos.map((t) => (t.id === todo.id ? todo : t));
+    setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+  };
+
+  const handleDeleteTodo = () => {
+    const updatedTodos = todos.filter((t) => t.id !== todo.id);
+    setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    handleCloseDetails();
+  };
 
   return (
     <>
@@ -73,7 +86,15 @@ function TodoItem({ todo, onToggleItem }) {
             </button>
 
             {/* Todo Details */}
-            <TodoDetails todo={todo} onClose={handleCloseDetails} onToggleItem={onToggleItem} />
+            {/* <TodoDetails todo={todo} onClose={handleCloseDetails} onToggleItem={onToggleItem} /> */}
+            <TodoDetails
+              todo={todo}
+              onClose={handleCloseDetails}
+              onToggleItem={onToggleItem}
+              onUpdateTodo={handleUpdateTodo}
+              onDeleteTodo={handleDeleteTodo}
+            />
+
           </div>
         </div>
       )}
