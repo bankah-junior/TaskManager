@@ -3,6 +3,7 @@ import TodoDetails from './TodoDetails';
 import 'react-quill/dist/quill.snow.css';
 import { ClipboardDocumentCheckIcon } from '@heroicons/react/24/outline';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
+import { completedTasks, taskPercentComplete } from '../utils/storage';
 
 function TodoItem({ todo, onToggleItem, todos, setTodos }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,8 +52,8 @@ function TodoItem({ todo, onToggleItem, todos, setTodos }) {
           <h3 className="mb-1 text-lg font-semibold text-gray-800">{todo.title}</h3>
 
           {/* Progress */}
-          <p className="hidden text-sm text-gray-600">
-            {completedItems}/{totalItems} - {yearlyItems} items completed
+          <p className="text-sm text-gray-600">
+            {completedTasks(todo.id)}/{yearlyItems} items completed ({taskPercentComplete(todo.id, totalItems, totalDays)}%)
           </p>
         </div>
 

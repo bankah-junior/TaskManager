@@ -25,6 +25,7 @@ function DayModal({ date, todo, onClose }) {
       items: dailyTasks.items.map((item) =>
         item.id === itemId ? { ...item, completed: !item.completed } : item
       ),
+      date: format(date, 'yyyy-MM-dd'),
     };
     setDailyTasks(newTasks);
     saveDailyTasks(todo.id, format(date, 'yyyy-MM-dd'), newTasks);
