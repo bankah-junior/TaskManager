@@ -7,11 +7,15 @@ import { ChevronRightIcon } from '@heroicons/react/24/solid';
 function TodoItem({ todo, onToggleItem, todos, setTodos }) {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Total days in the year
+  const totalDays = 365;
+
   const handleOpenDetails = () => setIsOpen(true);
   const handleCloseDetails = () => setIsOpen(false);
 
   const completedItems = todo.items.filter((item) => item.completed).length;
   const totalItems = todo.items.length;
+  const yearlyItems = totalDays * totalItems;
 
   const handleUpdateTodo = (todo) => {
     const updatedTodos = todos.map((t) => (t.id === todo.id ? todo : t));
@@ -47,8 +51,8 @@ function TodoItem({ todo, onToggleItem, todos, setTodos }) {
           <h3 className="mb-1 text-lg font-semibold text-gray-800">{todo.title}</h3>
 
           {/* Progress */}
-          <p className="text-sm text-gray-600">
-            {completedItems}/{totalItems} items completed
+          <p className="hidden text-sm text-gray-600">
+            {completedItems}/{totalItems} - {yearlyItems} items completed
           </p>
         </div>
 
