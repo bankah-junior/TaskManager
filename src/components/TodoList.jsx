@@ -122,7 +122,7 @@ function TodoList() {
   };
 
   return (
-    <div className="p-4 mx-auto max-w-7xl">
+    <div className="w-full p-4 mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Task Master</h1>
         <Link
